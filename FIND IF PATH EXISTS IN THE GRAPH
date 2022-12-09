@@ -1,0 +1,119 @@
+There is a bi-directional graph with n vertices, where each vertex is labeled from 0 to n - 1 (inclusive). The edges in the graph are represented as a 2D integer array edges, where each edges[i] = [ui, vi] denotes a bi-directional edge between vertex ui and vertex vi. Every vertex pair is connected by at most one edge, and no vertex has an edge to itself.
+
+You want to determine if there is a valid path that exists from vertex source to vertex destination.
+
+Given edges and the integers n, source, and destination, return true if there is a valid path from source to destination, or false otherwise.
+
+ 
+
+Example 1:
+
+
+Input: n = 3, edges = [[0,1],[1,2],[2,0]], source = 0, destination = 2
+Output: true
+Explanation: There are two paths from vertex 0 to vertex 2:
+- 0 → 1 → 2
+- 0 → 2
+Example 2:
+
+
+Input: n = 6, edges = [[0,1],[0,2],[3,5],[5,4],[4,3]], source = 0, destination = 5
+Output: false
+Explanation: There is no path from vertex 0 to vertex 5.
+ 
+
+Constraints:
+
+1 <= n <= 2 * 105
+0 <= edges.length <= 2 * 105
+edges[i].length == 2
+0 <= ui, vi <= n - 1
+ui != vi
+0 <= source, destination <= n - 1
+There are no duplicate edges.
+There are no self edges.
+
+//***************************************************************************APPROACH 1 BFS*************************************************************************
+
+class Solution {
+public:
+    
+    bool BFS(int n, vector<vector<int>>& graph,vector<bool> &visited, int source, int destination){
+        
+        //AMKE A QUEUE TO STORE THE NODES OF THE GRAPH
+        
+            queue<int> pendingNodes;
+        
+        //PUSH THE SOURCE NODE INTO THE QUEUE
+         
+           pendingNodes.push(source);
+        
+        //MARK VISITED OF THE QUEUE AS TRUE
+        
+            visited[source]=true;
+        
+        //RUN A LOOP UNTIL YOUR QUEUE IS NOT EMPTY
+        
+          while(pendingNodes.size()){
+              
+              int front=pendingNodes.front();
+                
+                    pendingNodes.pop();
+              
+              //IF YOUR FRONT IS EQUAL TO THE DESTINATION RETURN TRUE
+              
+                if(front==destination) return true;
+              
+              //RUN A LOOP OVER THE VECTOR STORES AT THE ITH POSITION
+              //ITH POSITION VECTOR STORES ALL THE NODES ADJACENT TO THE ITH NODE
+              
+              for(int i=0;i<graph[front].size();i++){
+                  
+                  //CHECK FOR THE UNVISITED ADJASENT NODE TO THE FRONT
+                  //PUSH IT INTO THE QUEUE AND MARK TRUE IN THE VISITED ARRAY
+
+                    if(visited[graph[front][i]]==false){
+                        
+                        pendingNodes.push(graph[front][i]);
+                        
+                          visited[graph[front][i]]=true;
+                    }
+              
+                  
+              
+              }
+              
+          
+          }
+        
+        //IN CASE OF ADJEN=CENCY MATRIX IT WILL GIVE MEMORY LIMIT EXCEEDS
+          
+        return false;
+    }
+    
+    bool validPath(int n, vector<vector<int>>& edges, int source, int destination) {
+        
+          vector<vector<int>> graph(n);
+        
+           //MAKING OF GRAPH USING ADJECENCY LIST
+          //IN CASE OF ADJEN=CENCY MATRIX IT WILL GIVE MEMORY LIMIT EXCEEDS
+        
+        for(int i=0;i<edges.size();i++){
+            
+             int first=edges[i][0];
+             int second=edges[i][1];
+            
+              graph[first].push_back(second);
+              graph[second].push_back(first);
+        }
+        
+        //MAKING OF A VISITED ARRAY
+        
+          vector<bool> visited(n,false);
+        
+        //CALL BFS ON THE GRAPH
+        
+        return BFS(n,graph,visited,source,destination);
+        
+    }
+};
